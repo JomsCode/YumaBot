@@ -56,21 +56,6 @@ bot.on("messageCreate", (user_id, data, message) => {
 
 
 
-
-bot.on("playerMove", (user, position) => {
-
-    if (mes === "Follow me") {
-        bot.move.walk(position.x, position.y, position.z, position.facing)
-            .catch(e => console.error(e)).f;
-
-    }
-    if (mes === "Stop") {
-
-        mes = "Stop"
-        return
-    }
-})
-
 const https = require('https');
 
 exports.handler = async (event, context) => {
