@@ -10,6 +10,7 @@ const bot = new Highrise({
     AutoFetchMessages: true,
 });
 let mes;
+let userToFollow;
 
 bot.login(config.token, config.room_id)
 console.log("working")
@@ -30,55 +31,45 @@ bot.on("chatCreate", (user, message) => {
         bot.player.emote(config.bot_id, "dance-blackpink").catch(e => console.error(e))
 
     }
+    if (user.username === "Jom_" || user.username === "itsmeuyun") {
+        let command = message.match(/Follow/g)
+        if (command === null) {
+            userToFollow = ""
+        }
+        console.log(command)
+        if (command[0] === "Follow") {
+            console.log(message.match(/Follow/g)[0])
+            userToFollow = message.match(/(@.+)/g)[0]
+            userToFollow = userToFollow.slice(1)
+
+        }
+
+    }
     bot.on("playerMove", (user, position) => {
+        console.log(userToFollow)
+        console.log(user.username)
 
-        if (mes === "Follow me") {
-            bot.move.walk(position.x, position.y, position.z, position.facing)
-                .catch(e => console.error(e)).f;
+        if (user.username === userToFollow) {
+            bot.move.walk(position.x, position.y, position.z, position.facing).catch((e) => {
+                console.log(e)
+            })
 
         }
-        if (mes === "Stop") {
+        // }
 
-            mes = "Stop"
-            return
-        }
     })
 
 
 
 }
-)
+);
+
+
+function followCommand() {
+
+}
 bot.on("messageCreate", (user_id, data, message) => {
     if (message === "hello") {
         bot.direct.send(data.id, "Hay naku").catch(e => console.error(e));
     }
 });
-
-
-
-const https = require('https');
-
-exports.handler = async (event, context) => {
-    const url = 'https://yoursitehere.onrender.com';
-
-    return new Promise((resolve, reject) => {
-        const req = https.get(url, (res) => {
-            if (res.statusCode === 200) {
-                resolve({
-                    statusCode: 200,
-                    body: 'Server pinged successfully',
-                });
-            } else {
-                reject(
-                    new Error(`Server ping failed with status code: ${res.statusCode}`)
-                );
-            }
-        });
-
-        req.on('error', (error) => {
-            reject(error);
-        });
-
-        req.end();
-    });
-};
